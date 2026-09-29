@@ -8,11 +8,13 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.widget.addTextChangedListener
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-
+import androidx.activity.viewModels
+import android.util.Log
 class MainActivity : AppCompatActivity() {
     private lateinit var adapter: AppAdapter
     // El estado de la pantalla que NO vive en una vista:
     private var soloFavoritas = false
+    private val vm: AppTecaViewModel by viewModels()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -41,6 +43,15 @@ class MainActivity : AppCompatActivity() {
     override fun onResume() {
         super.onResume()
         aplicarFiltros() // "por si algo cambió mientras no miraba"
+    }
+    override fun onDestroy() {
+        super.onDestroy()
+        Log.d("VIDA", "Main → onDestroy")
+    }
+
+    override fun onStart() {
+        super.onStart()
+        Log.d("VIDA", "Main → onStart")
     }
     // LA función: de todo el estado actual, deriva la lista visible y el botón.
     private fun aplicarFiltros() {
