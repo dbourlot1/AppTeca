@@ -33,6 +33,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.Alignment
+import androidx.compose.foundation.lazy.LazyItemScope
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.compose.foundation.layout.statusBarsPadding
@@ -60,10 +61,11 @@ fun Greeting(name: String, modifier: Modifier = Modifier) {
 fun FilaApp(
     app: App,
     onClick: () -> Unit,
-    onFavoritoClick: () -> Unit
+    onFavoritoClick: () -> Unit,
+    modifier: Modifier = Modifier
 ) {
     Row(
-        modifier = Modifier
+        modifier = modifier
             .fillMaxWidth()
             .clickable { onClick() }
             .padding(16.dp),
@@ -94,7 +96,8 @@ fun ListaApps(
             FilaApp(
                 app = app,
                 onClick = { onAppClick(app) },
-                onFavoritoClick = { onFavoritoClick(app) }
+                onFavoritoClick = { onFavoritoClick(app) },
+                modifier = Modifier.animateItem()
             )
         }
     }
