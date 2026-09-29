@@ -11,58 +11,34 @@ import androidx.recyclerview.widget.RecyclerView
 import androidx.activity.viewModels
 import android.util.Log
 class MainActivity : AppCompatActivity() {
-    private lateinit var adapter: AppAdapter
-    // El estado de la pantalla que NO vive en una vista:
-    private var soloFavoritas = false
     private val vm: AppTecaViewModel by viewModels()
+    private lateinit var adapter: AppAdapter
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        adapter = AppAdapter(Catalogo.apps,
+        adapter = AppAdapter(emptyList(),
             onAppClick = { app ->
                 val intent = Intent(this, DetalleActivity::class.java)
                 intent.putExtra("appId", app.id)
                 startActivity(intent)
             },
-            onFavoritoClick = { app ->
-                app.esFavorita = !app.esFavorita
-                aplicarFiltros() // cambió el estado → recalcular
-            })
+            onFavoritoClick = { app -> vm.alternarFavorita(app) })
         val rv = findViewById<RecyclerView>(R.id.rvApps)
         rv.layoutManager = LinearLayoutManager(this)
         rv.adapter = adapter
-        findViewById<EditText>(R.id.etBuscar).addTextChangedListener {
-            aplicarFiltros() // cambió el estado → recalcular
+        findViewById<EditText>(R.id.etBuscar).addTextChangedListener { texto ->
+            vm.buscar(texto.toString())
         }
         findViewById<Button>(R.id.btnSoloFav).setOnClickListener {
-            soloFavoritas = !soloFavoritas
-            aplicarFiltros() // cambió el estado → recalcular
+            vm.alternarModo()
         }
-        aplicarFiltros() // estado inicial → primera foto
-    }
-    override fun onResume() {
-        super.onResume()
-        aplicarFiltros() // "por si algo cambió mientras no miraba"
-    }
-    override fun onDestroy() {
-        super.onDestroy()
-        Log.d("VIDA", "Main → onDestroy")
-    }
-
-    override fun onStart() {
-        super.onStart()
-        Log.d("VIDA", "Main → onStart")
-    }
-    // LA función: de todo el estado actual, deriva la lista visible y el botón.
-    private fun aplicarFiltros() {
-        val q = findViewById<EditText>(R.id.etBuscar).text.toString().trim()
-        var lista: List<App> = Catalogo.apps
-        if (q.isNotEmpty()) lista = lista.filter {
-            it.nombre.contains(q, true) || it.categoria.contains(q, true)
+        // ── LAS suscripciones: el único lugar donde el estado toca la pantalla
+        vm.listaVisible.observe(this) { lista ->
+            adapter.actualizarLista(lista)
         }
-        if (soloFavoritas) lista = lista.filter { it.esFavorita }
-        adapter.actualizarLista(lista)
-        findViewById<Button>(R.id.btnSoloFav).text =
-            if (soloFavoritas) " Solo favoritas" else "☆ Todas"
+        vm.modoSoloFavoritas.observe(this) { activo ->
+            findViewById<Button>(R.id.btnSoloFav).text =
+                if (activo) "⭐ Solo favoritas" else "☆ Todas"
+        }
     }
 }
