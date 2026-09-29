@@ -35,7 +35,7 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.Alignment
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
-
+import androidx.compose.foundation.layout.statusBarsPadding
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -114,7 +114,7 @@ fun PantallaAppTeca(vm: AppTecaViewModel = viewModel()) {
             onVolver = { vm.volverALista() }
         )
     } else {
-        Column(modifier = Modifier.fillMaxSize()) {
+        Column(modifier = Modifier.fillMaxSize().statusBarsPadding()) {
             OutlinedTextField(
                 value = textoBusqueda,
                 onValueChange = { nuevo ->
@@ -146,7 +146,7 @@ fun PantallaAppTeca(vm: AppTecaViewModel = viewModel()) {
 @Composable
 fun DetalleApp(app: App, onFavoritoClick: () -> Unit, onVolver: () -> Unit) {
     BackHandler { onVolver() }
-    Column(modifier = Modifier.fillMaxSize().padding(24.dp)) {
+    Column(modifier = Modifier.fillMaxSize().statusBarsPadding().padding(24.dp)) {
         Text(app.nombre, style = MaterialTheme.typography.headlineLarge)
         Text(app.categoria, style = MaterialTheme.typography.bodyMedium)
         Spacer(Modifier.height(16.dp))
