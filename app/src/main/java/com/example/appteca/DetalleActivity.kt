@@ -6,6 +6,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import android.widget.TextView
+import android.widget.Button
 class DetalleActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -16,5 +17,10 @@ class DetalleActivity : AppCompatActivity() {
         findViewById<TextView>(R.id.tvDetNombre).text = app.nombre
         findViewById<TextView>(R.id.tvDetCategoria).text = app.categoria
         findViewById<TextView>(R.id.tvDetDescripcion).text = app.descripcion
+        val btn = findViewById<Button>(R.id.btnFavorito)
+        fun pintar() { btn.text = if (app.esFavorita) "★ Quitar de favoritas"
+        else "☆ Marcar favorita" }
+        pintar()
+        btn.setOnClickListener { app.esFavorita = !app.esFavorita; pintar() }
     }
 }
