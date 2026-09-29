@@ -27,7 +27,7 @@ Está dividido en ramas, correspondiendo la main al Laboratorio_3A, y las otras 
 ## Cómo clonar y ejecutar
 
 ```bash
-git clone <URL-del-repo>
+git clone <https://github.com/dbourlot1/AppTeca.git>
 ```
 
 1. Abrí la carpeta del proyecto en Android Studio (**File → Open**).
